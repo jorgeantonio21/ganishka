@@ -3,7 +3,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Message {
-    src: String,
-    dest: String,
-    body: Body,
+    pub(crate) src: String,
+    pub(crate) dest: String,
+    pub(crate) body: Body,
+}
+
+impl Message {
+    pub fn new(src: String, dest: String, body: Body) -> Self {
+        Self { src, dest, body }
+    }
 }
