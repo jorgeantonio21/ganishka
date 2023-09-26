@@ -1,5 +1,9 @@
-pub type NodeIdentifier = String;
+pub trait NodeInterface {
+    fn init() -> Self;
 
+    fn step(&self);
+}
 pub struct Node {
-    node_identifier: NodeIdentifier,
+    id: usize,
+    node: String,
 }

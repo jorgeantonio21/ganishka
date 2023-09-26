@@ -1,8 +1,10 @@
+use crate::r#type::Type;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Body {
-    r#type: String,
-    msg_id: u32,
-    echo: String,
+    msg_id: Option<usize>,
+    in_reply_to: Option<usize>,
+    #[serde(flatten)]
+    r#type: Type,
 }
