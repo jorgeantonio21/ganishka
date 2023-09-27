@@ -14,11 +14,15 @@ pub trait Node {
 
 pub struct EchoNode {
     id: usize,
+    received_messages: Vec<usize>,
 }
 
 impl EchoNode {
     pub fn new() -> Self {
-        Self { id: 0 }
+        Self {
+            id: 0,
+            received_messages: vec![],
+        }
     }
 }
 
@@ -71,6 +75,57 @@ impl Node for EchoNode {
             }
             Type::GenerateOk { .. } => {
                 bail!("Unexpected GenerateOk message")
+            }
+            Type::Broadcast { message: msg } => {
+                self.received_messages.push(msg);
+                let reply = Message {
+                    dest: message.src,
+                    src: message.dest,
+                    body: Body {
+                        msg_id: Some(self.id),
+                        in_reply_to: message.body.msg_id,
+                        r#type: crate::r#type::Type::BroadcastOk,
+                    },
+                };
+                serialize_to_stdout(&reply, stdout_lock)?;
+                self.id += 1;
+            }
+            Type::BroadcastOk => {
+                bail!("Unexpected received BroadcastOk message")
+            }
+            Type::Read => {
+                let reply = Message {
+                    dest: message.src,
+                    src: message.dest,
+                    body: Body {
+                        msg_id: Some(self.id),
+                        in_reply_to: message.body.msg_id,
+                        r#type: crate::r#type::Type::ReadOk {
+                            messages: self.received_messages.clone(),
+                        },
+                    },
+                };
+                serialize_to_stdout(&reply, stdout_lock)?;
+                self.id += 1;
+            }
+            Type::ReadOk { .. } => {
+                bail!("Unexpected received ReadOk message")
+            }
+            Type::Topology { .. } => {
+                let reply = Message {
+                    dest: message.src,
+                    src: message.dest,
+                    body: Body {
+                        msg_id: Some(self.id),
+                        in_reply_to: message.body.msg_id,
+                        r#type: crate::r#type::Type::TopologyOk,
+                    },
+                };
+                serialize_to_stdout(&reply, stdout_lock)?;
+                self.id += 1;
+            }
+            Type::TopologyOk => {
+                bail!("Unexpected received TopologyOk message")
             }
         };
 
