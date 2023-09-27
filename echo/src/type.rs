@@ -15,4 +15,8 @@ pub enum Type {
     EchoOk {
         echo: String,
     },
+    Generate,
+    GenerateOk {
+        id: usize,
+    },
 }

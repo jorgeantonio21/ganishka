@@ -1,6 +1,11 @@
 use std::io::StdoutLock;
 
-use crate::{body::Body, message::Message, r#type::Type, serialize_to_stdout};
+use crate::{
+    body::Body,
+    message::Message,
+    r#type::Type,
+    utils::{generate_id, serialize_to_stdout},
+};
 use anyhow::{bail, Error};
 
 pub trait Node {
@@ -49,6 +54,23 @@ impl Node for EchoNode {
                 };
                 serialize_to_stdout(&reply, stdout_lock)?;
                 self.id += 1;
+            }
+            Type::Generate => {
+                let id = generate_id();
+                let reply = Message {
+                    dest: message.src,
+                    src: message.dest,
+                    body: Body {
+                        msg_id: Some(self.id),
+                        in_reply_to: message.body.msg_id,
+                        r#type: crate::r#type::Type::GenerateOk { id },
+                    },
+                };
+                serialize_to_stdout(&reply, stdout_lock)?;
+                self.id += 1;
+            }
+            Type::GenerateOk { .. } => {
+                bail!("Unexpected GenerateOk message")
             }
         };
 
