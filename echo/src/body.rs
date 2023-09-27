@@ -3,10 +3,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Body {
-    pub(crate) msg_id: Option<usize>,
-    pub(crate) in_reply_to: Option<usize>,
+    pub msg_id: Option<usize>,
+    pub in_reply_to: Option<usize>,
     #[serde(flatten)]
-    pub(crate) r#type: Type,
+    pub r#type: Type,
 }
 
 impl Body {

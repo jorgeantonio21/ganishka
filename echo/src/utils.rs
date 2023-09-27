@@ -6,7 +6,7 @@ use std::{
 };
 use uuid::Uuid;
 
-pub(crate) fn serialize_to_stdout<T: Serialize>(
+pub fn serialize_to_stdout<T: Serialize>(
     value: &T,
     stdout_lock: &mut StdoutLock,
 ) -> io::Result<()> {

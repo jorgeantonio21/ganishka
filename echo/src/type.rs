@@ -1,15 +1,18 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Init {
+    pub(crate) node_id: String,
+    pub(crate) node_ids: Vec<String>,
+}
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type")]
 #[serde(rename_all = "snake_case")]
 pub enum Type {
-    Init {
-        node_id: String,
-        node_ids: Vec<String>,
-    },
+    Init(Init),
     InitOk,
     Echo {
         echo: String,
@@ -27,7 +30,7 @@ pub enum Type {
     BroadcastOk,
     Read,
     ReadOk {
-        messages: Vec<usize>,
+        messages: HashSet<usize>,
     },
     Topology {
         topology: HashMap<String, Vec<String>>,

@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Message {
-    pub(crate) src: String,
-    pub(crate) dest: String,
-    pub(crate) body: Body,
+    pub src: String,
+    pub dest: String,
+    pub body: Body,
 }
 
 impl Message {
