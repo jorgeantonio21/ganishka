@@ -36,4 +36,5 @@ pub enum Type {
         topology: HashMap<String, Vec<String>>,
     },
     TopologyOk,
+    Gossip,
 }
